@@ -1,0 +1,5 @@
+{
+  "name": "Copy of Gemini Image Editor",
+  "description": "Upload an image and use text prompts to edit it with the power of Gemini 2.5 Flash Image. Remove backgrounds, apply filters, and more.",
+  "requestFramePermissions": []
+}
