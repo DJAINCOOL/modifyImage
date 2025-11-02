@@ -1,5 +1,3 @@
-import { GoogleGenAI, Modality } from "@google/genai";
-
 export const fileToBase64 = (file: File): Promise<{ base64Data: string; mimeType: string }> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -19,39 +17,49 @@ export const editImageWithGemini = async (
   prompt: string
 ): Promise<string> => {
   try {
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY! });
-
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash-image',
-      contents: {
-        parts: [
-          {
-            inlineData: {
-              data: base64ImageData,
-              mimeType: mimeType,
-            },
-          },
-          {
-            text: prompt,
-          },
-        ],
+    const response = await fetch('/.netlify/functions/editImage', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       },
-      config: {
-        responseModalities: [Modality.IMAGE],
-      },
+      body: JSON.stringify({
+        base64ImageData,
+        mimeType,
+        prompt,
+      }),
     });
 
-    for (const part of response.candidates?.[0]?.content?.parts || []) {
-      if (part.inlineData) {
-        return part.inlineData.data;
-      }
+    if (!response.ok) {
+        const errorText = await response.text();
+        let errorMessage = `Request failed with status ${response.status}`;
+        try {
+            const errorData = JSON.parse(errorText);
+            if(errorData.error) {
+                errorMessage = errorData.error;
+            }
+        } catch (e) {
+            // The error response was not JSON, use the raw text if available
+            if(errorText) {
+                errorMessage = errorText;
+            }
+        }
+        throw new Error(errorMessage);
     }
 
-    throw new Error("No image data found in the API response. The prompt may have been blocked.");
+    const result = await response.json();
+    const base64Data = result.base64Data;
+
+    if (!base64Data) {
+        throw new Error("No image data found in the API response.");
+    }
+
+    return base64Data;
+
   } catch (error) {
-    console.error("Error editing image with Gemini:", error);
+    console.error("Error editing image:", error);
     if (error instanceof Error) {
-        throw new Error(`Failed to edit image: ${error.message}`);
+        // Re-throwing the error to be caught by the UI component
+        throw error;
     }
     throw new Error("An unknown error occurred while editing the image.");
   }
