@@ -33,8 +33,8 @@ export const run = async (request: Request) => {
         const ai = new GoogleGenAI({ apiKey });
 
         const response = await ai.models.generateContent({
-            model: "gemini-2.5-flash-image",
-            contents: {
+            model: "gemini-1.5-flash", // Corrected model name
+            contents: [{
                 parts: [
                     {
                         inlineData: {
@@ -46,7 +46,7 @@ export const run = async (request: Request) => {
                         text: prompt,
                     },
                 ],
-            },
+            }],
             config: {
                 responseModalities: [Modality.IMAGE],
             },
