@@ -1,11 +1,11 @@
 ---
-name: presentation-creator
-description: Create data-driven presentation slides using React, Vite, and Recharts with Sentry branding. Use when asked to "create a presentation", "build slides", "make a deck", "create a data presentation", "build a Sentry presentation". Scaffolds a complete slide-based app with charts, animations, and single-file HTML output.
+name: modifyImage
+description: Modify images using React and Vite. Use when asked to "modify an image", "edit a photo", "adjust image settings", "change image properties". Scaffolds a complete image editing app with responsive design and single-file HTML output.
 ---
 
-# Sentry Presentation Builder
+# Image Modifier
 
-Create interactive, data-driven presentation slides using React + Vite + Recharts, styled with the Sentry design system and built as a single distributable HTML file.
+Create interactive, data-driven image editing tools using React + Vite, styled with the Sentry design system and built as a single distributable HTML file.
 
 ## Step 1: Gather Requirements
 
